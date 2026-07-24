@@ -204,7 +204,7 @@ export default function App() {
       );
       applyAnalysis(result, audioData, preferredTimeZero);
       setProcessState("idle");
-      setActionNotice(`${result.points.length}点の測定結果を表示しました。`);
+      setActionNotice("測定結果を更新しました。");
     },
     [applyAnalysis, settings],
   );
@@ -631,10 +631,10 @@ export default function App() {
               {actionError ? (
                 <StatusMessage tone="error">{actionError}</StatusMessage>
               ) : null}
-              {actionNotice ? (
-                <StatusMessage tone="success">{actionNotice}</StatusMessage>
-              ) : null}
             </div>
+            <span className="sr-only" aria-live="polite">
+              {actionNotice}
+            </span>
           </div>
 
           <div className="measurement-readout" aria-live="polite">

@@ -1,4 +1,9 @@
-import { expect, test } from "@playwright/test";
+import { devices, expect, test } from "@playwright/test";
+
+const {
+  defaultBrowserType: _ipadDefaultBrowserType,
+  ...ipadDevice
+} = devices["iPad (gen 7)"];
 
 test("デモ音声からf-tを確認し、Δf-tへ切り替えられる", async ({
   page,
@@ -14,19 +19,37 @@ test("デモ音声からf-tを確認し、Δf-tへ切り替えられる", async 
 
   await page.getByRole("button", { name: "デモ" }).click();
   await expect(
-    page.getByText(
-      "デモを表示しました。台車が近づくと振動数が高くなる例です。",
-    ),
+    page.getByText("基準 f₀ = 4000.0 Hz"),
   ).toBeVisible({ timeout: 20_000 });
   await expect(
     page.getByRole("heading", { name: "観測振動数 f" }),
   ).toBeVisible();
+  await expect(page.locator(".status-message-success")).toHaveCount(0);
+
+  const chart = page.locator(".chart-shell");
+  await page.getByRole("button", { name: "グラフを拡大" }).click();
+  await expect(chart).toHaveAttribute("data-zoomed", "true");
+  const xBeforePan = await chart.getAttribute("data-view-x-min");
+  const plot = page.locator(".frequency-chart");
+  const box = await plot.boundingBox();
+  if (!box) {
+    throw new Error("グラフ領域を取得できませんでした。");
+  }
+  await page.mouse.move(box.x + box.width * 0.62, box.y + box.height * 0.5);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.46, box.y + box.height * 0.5);
+  await page.mouse.up();
+  await expect(chart).not.toHaveAttribute("data-view-x-min", xBeforePan ?? "");
+  await page
+    .getByRole("button", { name: "グラフの表示範囲をリセット" })
+    .click();
+  await expect(chart).toHaveAttribute("data-zoomed", "false");
 
   await page.getByRole("button", { name: "Δf" }).click();
   await expect(
     page.getByRole("heading", { name: "振動数のずれ Δf" }),
   ).toBeVisible();
-  await expect(page.getByText("Δf", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("0 Hz", { exact: true })).toBeVisible();
 
   expect(pageErrors).toEqual([]);
 });
@@ -77,4 +100,46 @@ test("低い画面でも主要操作が一画面に残る", async ({ page }) => 
   await expect(page.getByRole("button", { name: "基準を測る" })).toBeInViewport();
   await expect(page.getByRole("button", { name: "測定開始" })).toBeInViewport();
   await expect(page.getByRole("button", { name: "設定" })).toBeInViewport();
+});
+
+test.describe("iPad相当", () => {
+  test.use(ipadDevice);
+
+  test("縦向きで主要操作とタッチ用グラフ操作が使える", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("button", { name: "デモ" })).toBeInViewport();
+    await expect(page.getByRole("button", { name: "準備する" })).toBeInViewport();
+    await page.getByRole("button", { name: "デモ" }).click();
+    await expect(page.getByText("基準 f₀ = 4000.0 Hz")).toBeVisible({
+      timeout: 20_000,
+    });
+
+    const dimensions = await page.evaluate(() => ({
+      viewportWidth: document.documentElement.clientWidth,
+      viewportHeight: document.documentElement.clientHeight,
+      pageWidth: document.documentElement.scrollWidth,
+      pageHeight: document.documentElement.scrollHeight,
+    }));
+    expect(dimensions.pageWidth).toBeLessThanOrEqual(dimensions.viewportWidth);
+    expect(dimensions.pageHeight).toBeLessThanOrEqual(
+      dimensions.viewportHeight,
+    );
+
+    const zoomButton = page.getByRole("button", { name: "グラフを拡大" });
+    const zoomBox = await zoomButton.boundingBox();
+    expect(zoomBox?.width).toBeGreaterThanOrEqual(44);
+    expect(zoomBox?.height).toBeGreaterThanOrEqual(44);
+    await zoomButton.tap();
+    await expect(page.locator(".chart-shell")).toHaveAttribute(
+      "data-zoomed",
+      "true",
+    );
+    await page
+      .getByRole("button", { name: "グラフの表示範囲をリセット" })
+      .tap();
+    await expect(page.locator(".chart-shell")).toHaveAttribute(
+      "data-zoomed",
+      "false",
+    );
+  });
 });

@@ -6,4 +6,5 @@ coverage
 playwright-report
 test-results
 output/playwright
+output/*.tar.gz
 .playwright-cli
