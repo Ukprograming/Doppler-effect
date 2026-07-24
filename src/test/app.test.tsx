@@ -3,22 +3,26 @@ import { describe, expect, it } from "vitest";
 import App from "../App";
 
 describe("主要画面", () => {
-  it("測定手順、基準測定、本測定、詳細設定を日本語で表示する", () => {
+  it("グラフと3段階の測定操作を一画面に表示する", () => {
     render(<App />);
 
     expect(
       screen.getByRole("heading", {
-        name: "音の変化を、振動数として測る。",
+        name: "ドップラー振動数ラボ",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "マイクの使用を許可" }),
+      screen.getByRole("button", { name: "準備する" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "基準振動数を測定" }),
+      screen.getByRole("button", { name: "基準を測る" }),
     ).toBeDisabled();
-    expect(screen.getByText("PCが観測した振動数 f")).toBeInTheDocument();
-    const settings = screen.getByText("詳細設定（通常は変更不要）");
-    expect(settings.closest("details")).not.toHaveAttribute("open");
+    expect(
+      screen.getByRole("button", { name: "測定開始" }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("heading", { name: "観測振動数 f" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "設定" })).toBeInTheDocument();
   });
 });

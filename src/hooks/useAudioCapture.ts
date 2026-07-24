@@ -19,6 +19,7 @@ interface AudioCaptureState {
   requestPermission: () => Promise<void>;
   refreshDevices: () => Promise<void>;
   startCapture: () => Promise<void>;
+  getCaptureSnapshot: () => RecordedAudio | null;
   stopCapture: () => Promise<RecordedAudio>;
   clearError: () => void;
 }
@@ -267,6 +268,20 @@ export function useAudioCapture(): AudioCaptureState {
     }, 100);
   }, [permissionGranted]);
 
+  const getCaptureSnapshot = useCallback((): RecordedAudio | null => {
+    const context = contextRef.current;
+    if (!context || !recordingRef.current || chunksRef.current.length === 0) {
+      return null;
+    }
+    const samples = concatenateChunks(chunksRef.current);
+    return {
+      samples,
+      sampleRate: context.sampleRate,
+      duration: samples.length / context.sampleRate,
+      source: "microphone",
+    };
+  }, []);
+
   const stopCapture = useCallback(async (): Promise<RecordedAudio> => {
     const context = contextRef.current;
     if (!context) {
@@ -321,6 +336,7 @@ export function useAudioCapture(): AudioCaptureState {
     requestPermission,
     refreshDevices,
     startCapture,
+    getCaptureSnapshot,
     stopCapture,
     clearError: () => setError(null),
   };

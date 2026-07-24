@@ -13,12 +13,14 @@ interface SettingsPanelProps {
   settings: AnalysisSettings;
   onChange: (settings: AnalysisSettings) => void;
   sampleRate: number | null;
+  defaultOpen?: boolean;
 }
 
 export function SettingsPanel({
   settings,
   onChange,
   sampleRate,
+  defaultOpen = false,
 }: SettingsPanelProps) {
   const effectiveSampleRate = sampleRate ?? 48000;
   const windowSamples = Math.round(
@@ -31,7 +33,7 @@ export function SettingsPanel({
   ) => onChange({ ...settings, [key]: value });
 
   return (
-    <details className="settings-panel">
+    <details className="settings-panel" open={defaultOpen || undefined}>
       <summary>
         <span>
           <span className="block font-semibold text-slate-800">

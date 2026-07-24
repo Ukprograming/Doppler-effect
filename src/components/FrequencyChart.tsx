@@ -18,9 +18,9 @@ interface FrequencyChartProps {
   onSelect: (index: number) => void;
 }
 
-const WIDTH = 1120;
-const HEIGHT = 560;
-const MARGIN = { top: 48, right: 44, bottom: 78, left: 96 };
+const WIDTH = 900;
+const HEIGHT = 500;
+const MARGIN = { top: 44, right: 34, bottom: 66, left: 78 };
 
 function makeTriangle(x: number, y: number, size: number): string {
   return `${x},${y - size} ${x - size},${y + size} ${x + size},${y + size}`;
@@ -129,7 +129,7 @@ export const FrequencyChart = forwardRef<
         width={WIDTH}
         height={HEIGHT}
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="block h-auto min-w-[720px] w-full"
+        className="frequency-chart"
         role="img"
         aria-labelledby="chart-title chart-description"
       >
