@@ -39,9 +39,15 @@ PCが直接測る量は観測振動数 `f` です。アプリは最初に `f-t` 
 
 ## 起動方法
 
+`index.html` をChromeへ直接ドラッグしたり、ダブルクリックして開いたりしないでください。Viteのモジュールは `file://` では読み込めず、マイクも安全な配信元を必要とします。
+
+Windowsでは [start-local.cmd](./start-local.cmd) をダブルクリックすると、必要に応じて依存パッケージを準備し、ローカルサーバーとChromeまたは既定のブラウザを起動できます。
+
+ターミナルから起動する場合は次を実行します。
+
 ```bash
 npm install
-npm run dev
+npm run dev:open
 ```
 
 ターミナルに表示されたローカルURLをChromeまたはEdgeで開きます。通常は `http://localhost:5173/` です。
