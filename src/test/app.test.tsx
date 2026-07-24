@@ -8,7 +8,7 @@ describe("主要画面", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "ドップラー振動数ラボ",
+        name: "ドップラー効果",
       }),
     ).toBeInTheDocument();
     expect(

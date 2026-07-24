@@ -540,7 +540,7 @@ export default function App() {
             <WaveformIcon size={20} weight="bold" aria-hidden="true" />
           </span>
           <div>
-            <h1>ドップラー振動数ラボ</h1>
+            <h1>ドップラー効果</h1>
             <p>観測振動数 f を時間に対して測る</p>
           </div>
         </div>
