@@ -1,5 +1,5 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { FrequencyChart } from "../components/FrequencyChart";
 import type { AnalysisPoint } from "../types";
 
@@ -48,6 +48,48 @@ function renderChart(mode: "frequency" | "delta") {
 }
 
 describe("振動数グラフ", () => {
+  it("SVGにポインターを捕捉しても、タップした点を選択し、ドラッグやキャンセルでは選択しない", () => {
+    vi.stubGlobal("PointerEvent", MouseEvent);
+    try {
+      const onSelect = vi.fn();
+      const { container } = render(
+        <FrequencyChart
+          points={points}
+          baselineFrequency={4000}
+          mode="frequency"
+          rangeStart={0}
+          rangeEnd={1}
+          timeZero={0}
+          selectedIndex={1}
+          onSelect={onSelect}
+        />,
+      );
+      const chart = container.querySelector("svg")!;
+      const point = container.querySelector(".chart-point circle")!;
+      fireEvent.pointerDown(point, { clientX: 100, clientY: 200 });
+      fireEvent.pointerMove(chart, { clientX: 101, clientY: 201 });
+      fireEvent.pointerUp(chart, { clientX: 101, clientY: 201 });
+      expect(onSelect).toHaveBeenCalledWith(0);
+      expect(container.querySelector(".chart-shell")).toHaveAttribute("data-zoomed", "false");
+
+      onSelect.mockClear();
+      fireEvent.pointerDown(point, { clientX: 100, clientY: 200 });
+      fireEvent.pointerMove(chart, { clientX: 130, clientY: 200 });
+      fireEvent.pointerUp(chart, { clientX: 130, clientY: 200 });
+      expect(onSelect).not.toHaveBeenCalled();
+
+      fireEvent.pointerDown(point, { clientX: 100, clientY: 200 });
+      fireEvent.pointerCancel(chart);
+      expect(onSelect).not.toHaveBeenCalled();
+
+      const selected = screen.getByRole("button", { pressed: true });
+      fireEvent.keyDown(selected, { key: "Enter" });
+      expect(onSelect).toHaveBeenCalledWith(1);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("f-tでは基準振動数、Δf-tでは0 Hzのラインを表示する", () => {
     const { rerender } = renderChart("frequency");
     expect(screen.getByText("基準 f₀ = 4000.0 Hz")).toBeInTheDocument();

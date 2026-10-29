@@ -626,7 +626,7 @@ export default function App() {
 
           <div className="measurement-readout" aria-live="polite">
             <div className="primary-readout">
-              <span>現在の f</span>
+              <span>{isRecordingMeasurement ? "最新の f" : "選択点の f"}</span>
               <strong>
                 {selectedPoint ? selectedPoint.frequency.toFixed(1) : "—"}
                 <small>Hz</small>
@@ -649,7 +649,7 @@ export default function App() {
               </strong>
             </div>
             <div>
-              <span>時刻 t</span>
+              <span>{isRecordingMeasurement ? "最新の t" : "選択点の t"}</span>
               <strong>
                 {selectedPoint
                   ? (selectedPoint.time - displayTimeZero).toFixed(2)

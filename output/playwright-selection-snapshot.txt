@@ -1,0 +1,210 @@
+### Page
+- Page URL: http://127.0.0.1:4175/
+- Page Title: ドップラー効果
+- Console: 1 errors, 0 warnings
+### Snapshot
+```yaml
+- generic [ref=f1e3]:
+  - banner [ref=f1e4]:
+    - heading "ドップラー効果" [level=1] [ref=f1e10]
+    - generic [ref=f1e11]:
+      - button "マイクの準備を開く" [ref=f1e12] [cursor=pointer]
+      - strong [ref=f1e16]: マイク未設定
+  - main [ref=f1e17]:
+    - region "振動数グラフ" [ref=f1e18]:
+      - generic [ref=f1e19]:
+        - heading "観測振動数 f" [level=2] [ref=f1e21]
+        - generic "グラフの縦軸" [ref=f1e22]:
+          - button "f" [ref=f1e23] [cursor=pointer]
+          - button "Δf" [ref=f1e24] [cursor=pointer]
+      - generic [ref=f1e25]:
+        - generic [ref=f1e26]:
+          - generic "グラフの表示範囲" [ref=f1e27]:
+            - button "グラフを拡大" [ref=f1e28] [cursor=pointer]: ＋
+            - button "グラフを縮小" [ref=f1e29] [cursor=pointer]: −
+            - button "グラフの表示範囲をリセット" [disabled] [ref=f1e30] [cursor=pointer]: 全体
+          - img "PCが観測した振動数 横軸は時間、縦軸は観測振動数です。 丸印は有効な測定点、三角印は信頼性の低い測定点です。 点をクリックまたはタップすると、その振動数と時刻を表示します。 ドラッグで移動し、ホイールまたはピンチ操作で拡大縮小できます。" [ref=f1e31]:
+            - generic [ref=f1e33]: "4027.8"
+            - generic [ref=f1e35]: "4021.5"
+            - generic [ref=f1e37]: "4015.2"
+            - generic [ref=f1e39]: "4008.8"
+            - generic [ref=f1e41]: "4002.5"
+            - generic [ref=f1e43]: "3996.2"
+            - generic [ref=f1e45]: "-0.60"
+            - generic [ref=f1e47]: "0.40"
+            - generic [ref=f1e49]: "1.40"
+            - generic [ref=f1e51]: "2.40"
+            - generic [ref=f1e53]: "3.40"
+            - generic [ref=f1e55]: "4.40"
+            - generic [ref=f1e146]:
+              - button "-0.60秒、4000.0ヘルツ、測定品質良好" [ref=f1e148] [cursor=pointer]
+              - button "-0.55秒、4000.0ヘルツ、測定品質良好" [ref=f1e151] [cursor=pointer]
+              - button "-0.50秒、4000.0ヘルツ、測定品質良好" [ref=f1e154] [cursor=pointer]
+              - button "-0.45秒、4000.0ヘルツ、測定品質良好" [ref=f1e157] [cursor=pointer]
+              - button "-0.40秒、4000.0ヘルツ、測定品質良好" [ref=f1e160] [cursor=pointer]
+              - button "-0.35秒、4000.0ヘルツ、測定品質良好" [ref=f1e163] [cursor=pointer]
+              - button "-0.30秒、4000.0ヘルツ、測定品質良好" [ref=f1e166] [cursor=pointer]
+              - button "-0.25秒、4000.0ヘルツ、測定品質良好" [ref=f1e169] [cursor=pointer]
+              - button "-0.20秒、4000.0ヘルツ、測定品質良好" [ref=f1e172] [cursor=pointer]
+              - button "-0.15秒、4000.0ヘルツ、測定品質良好" [ref=f1e175] [cursor=pointer]
+              - button "-0.10秒、4000.0ヘルツ、測定品質良好" [ref=f1e178] [cursor=pointer]
+              - button "-0.05秒、4000.0ヘルツ、測定品質良好" [ref=f1e181] [cursor=pointer]
+              - button "0.00秒、4000.0ヘルツ、測定品質良好" [ref=f1e184] [cursor=pointer]
+              - button "0.05秒、4000.0ヘルツ、測定品質良好" [ref=f1e187] [cursor=pointer]
+              - button "0.10秒、4000.0ヘルツ、測定品質良好" [ref=f1e190] [cursor=pointer]
+              - button "0.15秒、4000.1ヘルツ、測定品質良好" [ref=f1e193] [cursor=pointer]
+              - button "0.20秒、4000.1ヘルツ、測定品質良好" [ref=f1e196] [cursor=pointer]
+              - button "0.25秒、4000.1ヘルツ、測定品質良好" [ref=f1e199] [cursor=pointer]
+              - button "0.30秒、4000.2ヘルツ、測定品質良好" [ref=f1e202] [cursor=pointer]
+              - button "0.35秒、4000.2ヘルツ、測定品質良好" [ref=f1e205] [cursor=pointer]
+              - button "0.40秒、4000.3ヘルツ、測定品質良好" [ref=f1e208] [cursor=pointer]
+              - button "0.45秒、4000.3ヘルツ、測定品質良好" [ref=f1e211] [cursor=pointer]
+              - button "0.50秒、4000.4ヘルツ、測定品質良好" [ref=f1e214] [cursor=pointer]
+              - button "0.55秒、4000.5ヘルツ、測定品質良好" [ref=f1e217] [cursor=pointer]
+              - button "0.60秒、4000.6ヘルツ、測定品質良好" [ref=f1e220] [cursor=pointer]
+              - button "0.65秒、4000.7ヘルツ、測定品質良好" [ref=f1e223] [cursor=pointer]
+              - button "0.70秒、4000.8ヘルツ、測定品質良好" [ref=f1e226] [cursor=pointer]
+              - button "0.75秒、4000.9ヘルツ、測定品質良好" [ref=f1e229] [cursor=pointer]
+              - button "0.80秒、4001.1ヘルツ、測定品質良好" [ref=f1e232] [cursor=pointer]
+              - button "0.85秒、4001.2ヘルツ、測定品質良好" [ref=f1e235] [cursor=pointer]
+              - button "0.90秒、4001.3ヘルツ、測定品質良好" [ref=f1e238] [cursor=pointer]
+              - button "0.95秒、4001.5ヘルツ、測定品質良好" [ref=f1e241] [cursor=pointer]
+              - button "1.00秒、4001.7ヘルツ、測定品質良好" [ref=f1e244] [cursor=pointer]
+              - button "1.05秒、4001.8ヘルツ、測定品質良好" [ref=f1e247] [cursor=pointer]
+              - button "1.10秒、4002.0ヘルツ、測定品質良好" [ref=f1e250] [cursor=pointer]
+              - button "1.15秒、4002.2ヘルツ、測定品質良好" [ref=f1e253] [cursor=pointer]
+              - button "1.20秒、4002.4ヘルツ、測定品質良好" [ref=f1e256] [cursor=pointer]
+              - button "1.25秒、4002.6ヘルツ、測定品質良好" [ref=f1e259] [cursor=pointer]
+              - button "1.30秒、4002.8ヘルツ、測定品質良好" [ref=f1e262] [cursor=pointer]
+              - button "1.35秒、4003.0ヘルツ、測定品質良好" [ref=f1e265] [cursor=pointer]
+              - button "1.40秒、4003.3ヘルツ、測定品質良好" [ref=f1e268] [cursor=pointer]
+              - button "1.45秒、4003.5ヘルツ、測定品質良好" [ref=f1e271] [cursor=pointer]
+              - button "1.50秒、4003.7ヘルツ、測定品質良好" [ref=f1e274] [cursor=pointer]
+              - button "1.55秒、4004.0ヘルツ、測定品質良好" [ref=f1e277] [cursor=pointer]
+              - button "1.60秒、4004.2ヘルツ、測定品質良好" [ref=f1e280] [cursor=pointer]
+              - button "1.65秒、4004.5ヘルツ、測定品質良好" [ref=f1e283] [cursor=pointer]
+              - button "1.70秒、4004.8ヘルツ、測定品質良好" [ref=f1e286] [cursor=pointer]
+              - button "1.75秒、4005.1ヘルツ、測定品質良好" [ref=f1e289] [cursor=pointer]
+              - button "1.80秒、4005.4ヘルツ、測定品質良好" [ref=f1e292] [cursor=pointer]
+              - button "1.85秒、4005.7ヘルツ、測定品質良好" [ref=f1e295] [cursor=pointer]
+              - button "1.90秒、4006.0ヘルツ、測定品質良好" [ref=f1e298] [cursor=pointer]
+              - button "1.95秒、4006.3ヘルツ、測定品質良好" [ref=f1e301] [cursor=pointer]
+              - button "2.00秒、4006.6ヘルツ、測定品質良好" [ref=f1e304] [cursor=pointer]
+              - button "2.05秒、4007.0ヘルツ、測定品質良好" [ref=f1e307] [cursor=pointer]
+              - button "2.10秒、4007.3ヘルツ、測定品質良好" [ref=f1e310] [cursor=pointer]
+              - button "2.15秒、4007.7ヘルツ、測定品質良好" [ref=f1e313] [cursor=pointer]
+              - button "2.20秒、4008.1ヘルツ、測定品質良好" [ref=f1e316] [cursor=pointer]
+              - button "2.25秒、4008.4ヘルツ、測定品質良好" [ref=f1e319] [cursor=pointer]
+              - button "2.30秒、4008.8ヘルツ、測定品質良好" [ref=f1e322] [cursor=pointer]
+              - button "2.35秒、4009.2ヘルツ、測定品質良好" [ref=f1e325] [cursor=pointer]
+              - button "2.40秒、4009.6ヘルツ、測定品質良好" [ref=f1e328] [cursor=pointer]
+              - button "2.45秒、4010.0ヘルツ、測定品質良好" [ref=f1e331] [cursor=pointer]
+              - button "2.50秒、4010.4ヘルツ、測定品質良好" [ref=f1e334] [cursor=pointer]
+              - button "2.55秒、4010.8ヘルツ、測定品質良好" [ref=f1e337] [cursor=pointer]
+              - button "2.60秒、4011.2ヘルツ、測定品質良好" [ref=f1e340] [cursor=pointer]
+              - button "2.65秒、4011.7ヘルツ、測定品質良好" [ref=f1e343] [cursor=pointer]
+              - button "2.70秒、4012.1ヘルツ、測定品質良好" [ref=f1e346] [cursor=pointer]
+              - button "2.75秒、4012.6ヘルツ、測定品質良好" [ref=f1e349] [cursor=pointer]
+              - button "2.80秒、4013.0ヘルツ、測定品質良好" [ref=f1e352] [cursor=pointer]
+              - button "2.85秒、4013.5ヘルツ、測定品質良好" [ref=f1e355] [cursor=pointer]
+              - button "2.90秒、4014.0ヘルツ、測定品質良好" [ref=f1e358] [cursor=pointer]
+              - button "2.95秒、4014.5ヘルツ、測定品質良好" [ref=f1e361] [cursor=pointer]
+              - button "3.00秒、4015.0ヘルツ、測定品質良好" [ref=f1e364] [cursor=pointer]
+              - button "3.05秒、4015.4ヘルツ、測定品質良好" [ref=f1e367] [cursor=pointer]
+              - button "3.10秒、4016.0ヘルツ、測定品質良好" [ref=f1e370] [cursor=pointer]
+              - button "3.15秒、4016.5ヘルツ、測定品質良好" [ref=f1e373] [cursor=pointer]
+              - button "3.20秒、4017.0ヘルツ、測定品質良好" [ref=f1e376] [cursor=pointer]
+              - button "3.25秒、4017.6ヘルツ、測定品質良好" [ref=f1e379] [cursor=pointer]
+              - button "3.30秒、4018.1ヘルツ、測定品質良好" [ref=f1e382] [cursor=pointer]
+              - button "3.35秒、4018.6ヘルツ、測定品質良好" [ref=f1e385] [cursor=pointer]
+              - button "3.40秒、4019.2ヘルツ、測定品質良好" [ref=f1e388] [cursor=pointer]
+              - button "3.45秒、4019.8ヘルツ、測定品質良好" [ref=f1e391] [cursor=pointer]
+              - button "3.50秒、4020.4ヘルツ、測定品質良好" [ref=f1e394] [cursor=pointer]
+              - button "3.55秒、4021.0ヘルツ、測定品質良好" [ref=f1e397] [cursor=pointer]
+              - button "3.60秒、4021.5ヘルツ、測定品質良好" [ref=f1e400] [cursor=pointer]
+              - button "3.65秒、4022.1ヘルツ、測定品質良好" [ref=f1e403] [cursor=pointer]
+              - button "3.70秒、4022.8ヘルツ、測定品質良好" [ref=f1e406] [cursor=pointer]
+              - button "3.75秒、4023.4ヘルツ、測定品質良好" [ref=f1e409] [cursor=pointer]
+              - button "3.80秒、4023.8ヘルツ、測定品質良好" [ref=f1e412] [cursor=pointer]
+              - button "3.85秒、4024.0ヘルツ、測定品質良好" [ref=f1e415] [cursor=pointer]
+              - button "3.90秒、4024.0ヘルツ、測定品質良好" [ref=f1e418] [cursor=pointer]
+              - button "3.95秒、4024.0ヘルツ、測定品質良好" [ref=f1e421] [cursor=pointer]
+              - button "4.00秒、4024.0ヘルツ、測定品質良好" [ref=f1e424] [cursor=pointer]
+              - button "4.05秒、4024.0ヘルツ、測定品質良好" [ref=f1e427] [cursor=pointer]
+              - button "4.10秒、4024.0ヘルツ、測定品質良好" [ref=f1e430] [cursor=pointer]
+              - button "4.15秒、4024.0ヘルツ、測定品質良好" [ref=f1e433] [cursor=pointer]
+              - button "4.20秒、4024.0ヘルツ、測定品質良好" [ref=f1e436] [cursor=pointer]
+              - button "4.25秒、4024.0ヘルツ、測定品質良好" [ref=f1e439] [cursor=pointer]
+              - button "4.30秒、4024.0ヘルツ、測定品質良好" [ref=f1e442] [cursor=pointer]
+              - button "4.35秒、4024.0ヘルツ、測定品質良好" [ref=f1e445] [cursor=pointer]
+              - button "4.40秒、4024.0ヘルツ、測定品質良好" [pressed] [ref=f1e448] [cursor=pointer]
+            - generic [ref=f1e58]: 基準 f₀ = 4000.0 Hz
+            - generic [ref=f1e59]: 時間 t [s]
+            - generic [ref=f1e60]: 観測振動数 f [Hz]
+          - paragraph: 点をクリック・タップして選択
+        - generic [ref=f1e61]: デモを表示しました。台車が近づくと振動数が高くなる例です。
+      - generic [ref=f1e62]:
+        - generic [ref=f1e63]:
+          - generic [ref=f1e64]: 選択点の f
+          - strong [ref=f1e65]: 4024.0Hz
+        - generic [ref=f1e66]:
+          - generic [ref=f1e67]: 基準 f₀
+          - strong [ref=f1e68]: 4000.0Hz
+        - generic [ref=f1e69]:
+          - generic [ref=f1e70]: Δf
+          - strong [ref=f1e71]: 24.0Hz
+        - generic [ref=f1e72]:
+          - generic [ref=f1e73]: 選択点の t
+          - strong [ref=f1e74]: 4.40s
+        - generic [ref=f1e75]:
+          - generic [ref=f1e76]: 品質
+          - generic [ref=f1e451]: 良好
+      - generic [ref=f1e455]:
+        - generic [ref=f1e456]:
+          - generic [ref=f1e457]: 開始 0.10 s
+          - slider "開始 0.10 s" [ref=f1e458]: "0.1"
+        - generic [ref=f1e459]:
+          - generic [ref=f1e460]: t = 0 0.70 s
+          - slider "t = 0 0.70 s" [ref=f1e461]: "0.7"
+        - generic [ref=f1e462]:
+          - generic [ref=f1e463]: 終了 5.10 s
+          - slider "終了 5.10 s" [ref=f1e464]: "5.1"
+        - paragraph [ref=f1e465]: 有効 101/101点
+    - complementary "測定操作" [ref=f1e78]:
+      - generic [ref=f1e79]:
+        - generic [ref=f1e80]:
+          - generic [ref=f1e81]: 音源
+          - spinbutton "音源" [ref=f1e82]: "2000"
+          - generic [ref=f1e83]: Hz
+        - meter "現在のマイク音量" [ref=f1e85]
+      - generic [ref=f1e88]:
+        - generic [ref=f1e89]:
+          - generic [ref=f1e90]:
+            - generic [ref=f1e91]: "1"
+            - generic [ref=f1e92]:
+              - heading "基準 f₀" [level=2] [ref=f1e93]
+              - paragraph [ref=f1e94]: 静止
+            - img "準備完了" [ref=f1e143]
+          - button "測り直す" [disabled] [ref=f1e145]
+        - generic [ref=f1e99]:
+          - generic [ref=f1e100]:
+            - generic [ref=f1e101]: "2"
+            - generic [ref=f1e102]:
+              - heading "本測定" [level=2] [ref=f1e103]
+              - paragraph [ref=f1e104]: 移動
+            - img "準備完了" [ref=f1e466]
+          - button "測定開始" [ref=f1e106] [cursor=pointer]
+      - generic [ref=f1e109]:
+        - button "デモ" [ref=f1e110] [cursor=pointer]
+        - generic [ref=f1e113] [cursor=pointer]:
+          - text: WAV読込
+          - button "WAV読込" [ref=f1e116]
+        - button "設定" [ref=f1e117] [cursor=pointer]
+      - generic [ref=f1e120]:
+        - generic [ref=f1e121]: 保存
+        - generic [ref=f1e122]:
+          - button "CSVを保存" [ref=f1e123] [cursor=pointer]
+          - button "グラフPNGを保存" [ref=f1e126] [cursor=pointer]
+          - button "生音声WAVを保存" [ref=f1e129] [cursor=pointer]
+          - button "測定条件JSONを保存" [ref=f1e132] [cursor=pointer]
+```

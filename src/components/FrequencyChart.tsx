@@ -103,6 +103,7 @@ export const FrequencyChart = forwardRef<
   const dragStartRef = useRef<DragStart | null>(null);
   const pinchStartRef = useRef<PinchStart | null>(null);
   const movedRef = useRef(false);
+  const pressedPointRef = useRef<number | null>(null);
   const [view, setView] = useState<ViewDomain | null>(null);
 
   const setSvgRef = useCallback(
@@ -350,16 +351,46 @@ export const FrequencyChart = forwardRef<
       x: event.clientX,
       y: event.clientY,
     });
-    movedRef.current = false;
-
     const positions = [...pointerPositionsRef.current.values()];
     if (positions.length === 1) {
+      movedRef.current = false;
+      const point = (event.target as Element).closest("[data-point-index]");
+      pressedPointRef.current = point
+        ? Number(point.getAttribute("data-point-index"))
+        : null;
+      const matrix = event.currentTarget.getScreenCTM?.();
+      if (matrix) {
+        const position = event.currentTarget.createSVGPoint();
+        position.x = event.clientX;
+        position.y = event.clientY;
+        const local = position.matrixTransform(matrix.inverse());
+        pressedPointRef.current = null;
+        if (
+          local.x >= MARGIN.left && local.x <= WIDTH - MARGIN.right &&
+          local.y >= MARGIN.top && local.y <= HEIGHT - MARGIN.bottom
+        ) {
+          let nearestDistance = Number.POSITIVE_INFINITY;
+          for (const { point: candidate, index } of visible) {
+            const x = xScale(candidate.time);
+            const y = yScale(candidate.frequency);
+            if (x < MARGIN.left || x > WIDTH - MARGIN.right ||
+                y < MARGIN.top || y > HEIGHT - MARGIN.bottom) continue;
+            const distance = Math.hypot(x - local.x, y - local.y);
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+              pressedPointRef.current = index;
+            }
+          }
+        }
+      }
       dragStartRef.current = {
         pointer: positions[0],
         domain: view ?? baseDomain,
       };
       pinchStartRef.current = null;
     } else if (positions.length === 2) {
+      movedRef.current = true;
+      pressedPointRef.current = null;
       dragStartRef.current = null;
       pinchStartRef.current = {
         distance: Math.max(1, pointerDistance(positions[0], positions[1])),
@@ -393,6 +424,9 @@ export const FrequencyChart = forwardRef<
       const movementY = positions[0].y - dragStartRef.current.pointer.y;
       if (Math.hypot(movementX, movementY) > 3) {
         movedRef.current = true;
+      }
+      if (!movedRef.current) {
+        return;
       }
       const source = dragStartRef.current.domain;
       const sourceXSpan = source.xMaximum - source.xMinimum;
@@ -450,6 +484,17 @@ export const FrequencyChart = forwardRef<
   const endPointerInteraction = (
     event: ReactPointerEvent<SVGSVGElement>,
   ) => {
+    // SVG pointer capture retargets the click to the chart. Select the point
+    // pressed at the start of a tap, before releasing that capture.
+    if (
+      event.type === "pointerup" &&
+      pointerPositionsRef.current.size === 1 &&
+      !movedRef.current &&
+      pressedPointRef.current !== null
+    ) {
+      onSelect(pressedPointRef.current);
+    }
+    pressedPointRef.current = null;
     pointerPositionsRef.current.delete(event.pointerId);
     try {
       if (event.currentTarget.hasPointerCapture(event.pointerId)) {
@@ -556,6 +601,7 @@ export const FrequencyChart = forwardRef<
           横軸は時間、縦軸は
           {mode === "frequency" ? "観測振動数" : "振動数のずれ"}です。
           丸印は有効な測定点、三角印は信頼性の低い測定点です。
+          点をクリックまたはタップすると、その振動数と時刻を表示します。
           ドラッグで移動し、ホイールまたはピンチ操作で拡大縮小できます。
         </desc>
         <defs>
@@ -639,14 +685,18 @@ export const FrequencyChart = forwardRef<
               <g
                 key={`${point.time}-${index}`}
                 className="chart-point"
+                data-point-index={index}
                 role="button"
+                aria-pressed={selected}
                 tabIndex={0}
                 aria-label={`${(point.time - timeZero).toFixed(2)}秒、${
                   mode === "frequency"
                     ? `${point.frequency.toFixed(1)}ヘルツ`
                     : `${(point.frequency - baselineFrequency).toFixed(1)}ヘルツのずれ`
                 }、測定品質${point.qualityLabel}`}
-                onClick={() => onSelect(index)}
+                onClick={(event) => {
+                  if (event.detail === 0) onSelect(index);
+                }}
                 onKeyDown={(event) => handleKey(event, index)}
               >
                 <circle
@@ -655,6 +705,17 @@ export const FrequencyChart = forwardRef<
                   r={selected ? 13 : 10}
                   fill="transparent"
                 />
+                {selected ? (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={10}
+                    fill="none"
+                    stroke="#173f68"
+                    strokeWidth="1.5"
+                    pointerEvents="none"
+                  />
+                ) : null}
                 {point.valid ? (
                   <circle
                     cx={cx}
@@ -718,6 +779,9 @@ export const FrequencyChart = forwardRef<
             : "振動数のずれ Δf [Hz]"}
         </text>
       </svg>
+      {points.length > 0 ? (
+        <p className="chart-gesture-hint">点をクリック・タップして選択</p>
+      ) : null}
     </div>
   );
 });
