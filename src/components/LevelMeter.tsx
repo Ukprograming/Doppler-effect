@@ -14,17 +14,13 @@ export function LevelMeter({ level, peakLevel, active }: LevelMeterProps) {
         : "ready";
   const label =
     state === "low"
-      ? "音量が小さめです"
+      ? "音量不足"
       : state === "clipping"
-        ? "音が大きすぎます"
-        : "測定できる音量です";
+        ? "音量過大"
+        : "音量適正";
 
   return (
-    <div className="space-y-3" aria-live="polite">
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-sm font-semibold text-slate-700">現在の音量</span>
-        <span className="font-mono text-sm text-slate-500">{percent}%</span>
-      </div>
+    <div className="level-meter" aria-live="polite">
       <div
         className="level-track"
         role="meter"
@@ -32,6 +28,7 @@ export function LevelMeter({ level, peakLevel, active }: LevelMeterProps) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={percent}
+        aria-valuetext={active ? label : "マイク未設定"}
       >
         <span
           className={`level-fill level-${state}`}
@@ -39,20 +36,16 @@ export function LevelMeter({ level, peakLevel, active }: LevelMeterProps) {
         />
         <span className="level-target" aria-hidden="true" />
       </div>
-      <p
+      {active && state !== "ready" ? <p
         className={`inline-status ${
-          state === "ready"
-            ? "status-ok"
-            : state === "clipping"
-              ? "status-error"
-              : "status-caution"
+          state === "clipping" ? "status-error" : "status-caution"
         }`}
       >
         <span aria-hidden="true">
-          {state === "ready" ? "○" : state === "clipping" ? "×" : "△"}
+          {state === "clipping" ? "×" : "△"}
         </span>
         {label}
-      </p>
+      </p> : null}
     </div>
   );
 }

@@ -37,10 +37,7 @@ export function SettingsPanel({
       <summary>
         <span>
           <span className="block font-semibold text-slate-800">
-            詳細設定（通常は変更不要）
-          </span>
-          <span className="mt-1 block text-sm font-normal text-slate-500">
-            解析時間幅、探索範囲、平滑化など
+            解析設定
           </span>
         </span>
         <CaretDownIcon
@@ -53,7 +50,7 @@ export function SettingsPanel({
       <div className="border-t border-slate-200 px-5 py-6 md:px-7">
         <div className="settings-grid">
           <label className="field-block">
-            <span>想定する音源振動数 [Hz]</span>
+            <span>音源振動数 [Hz]</span>
             <input
               type="number"
               min={100}
@@ -64,10 +61,9 @@ export function SettingsPanel({
                 update("expectedFrequency", Number(event.target.value))
               }
             />
-            <small>スマートフォンから出す純音に合わせます。</small>
           </label>
           <label className="field-block">
-            <span>基準音の測定時間 [s]</span>
+            <span>基準測定時間 [s]</span>
             <input
               type="number"
               min={1}
@@ -80,7 +76,7 @@ export function SettingsPanel({
             />
           </label>
           <label className="field-block">
-            <span>本測定の最大時間 [s]</span>
+            <span>最大測定時間 [s]</span>
             <input
               type="number"
               min={2}
@@ -105,10 +101,6 @@ export function SettingsPanel({
               <option value={0.3}>0.30秒</option>
               <option value={0.5}>0.50秒</option>
             </select>
-            <small>
-              短いほど時間変化を追いやすいが、振動数は不安定になりやすい。
-              長いほど振動数は安定するが、急な変化を捉えにくい。
-            </small>
           </label>
           <label className="field-block">
             <span>更新間隔 [s]</span>
@@ -153,7 +145,7 @@ export function SettingsPanel({
             </select>
           </label>
           <label className="field-block">
-            <span>測定品質のしきい値</span>
+            <span>品質しきい値</span>
             <strong>{Math.round(settings.qualityThreshold * 100)}</strong>
             <input
               type="range"
@@ -189,6 +181,8 @@ export function SettingsPanel({
           </div>
         </div>
 
+        <details className="analysis-info">
+          <summary>解析情報</summary>
         <div className="mt-7 grid gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["実際のサンプリング周波数", `${effectiveSampleRate} Hz`],
@@ -216,6 +210,7 @@ export function SettingsPanel({
           表示が0.1 Hz単位でも、0.1 Hzの精度を保証するものではありません。
           ゼロパディングは周波数格子を細かくしますが、本質的な分解能を上げません。
         </p>
+        </details>
         <button
           className="button button-quiet mt-6"
           type="button"

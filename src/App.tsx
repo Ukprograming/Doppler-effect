@@ -22,6 +22,7 @@ import {
   useState,
 } from "react";
 import { FrequencyChart, type GraphMode } from "./components/FrequencyChart";
+import { MicrophoneDialog } from "./components/MicrophoneDialog";
 import { LevelMeter } from "./components/LevelMeter";
 import { QualityBadge } from "./components/QualityBadge";
 import { SettingsPanel } from "./components/SettingsPanel";
@@ -117,8 +118,6 @@ export default function App() {
     useState<AnalysisSettings>(DEFAULT_SETTINGS);
   const [processState, setProcessState] = useState<ProcessState>("idle");
   const [countdown, setCountdown] = useState<number | null>(null);
-  const [baselineCandidate, setBaselineCandidate] =
-    useState<BaselineResult | null>(null);
   const [baseline, setBaseline] = useState<BaselineResult | null>(null);
   const [recordedAudio, setRecordedAudio] = useState<RecordedAudio | null>(
     null,
@@ -133,6 +132,7 @@ export default function App() {
   const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(
     null,
   );
+  const [microphoneOpen, setMicrophoneOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
@@ -216,7 +216,7 @@ export default function App() {
     }
     setActionError(null);
     setActionNotice(null);
-    setBaselineCandidate(null);
+
     try {
       await runCountdown("countdown-baseline");
       setProcessState("recording-baseline");
@@ -236,7 +236,7 @@ export default function App() {
           "基準振動数を決められませんでした。音量を確認して再測定してください。",
         );
       }
-      setBaselineCandidate(summary);
+
       setBaseline(summary);
       setAnalysis(null);
       setRecordedAudio(null);
@@ -374,7 +374,7 @@ export default function App() {
       totalPointCount: 34,
     };
     setBaseline(demoBaseline);
-    setBaselineCandidate(demoBaseline);
+
     try {
       const demoAudio = createDemoAudio();
       await analyzeRecordedAudio(demoAudio, demoBaseline, 0.7);
@@ -407,7 +407,7 @@ export default function App() {
         } satisfies BaselineResult);
       if (!baseline) {
         setBaseline(activeBaseline);
-        setBaselineCandidate(activeBaseline);
+
       }
       await analyzeRecordedAudio(decoded, activeBaseline);
     } catch (error) {
@@ -490,17 +490,10 @@ export default function App() {
       : processState === "recording-baseline"
         ? "基準音を測定中"
         : processState === "recording-measurement"
-          ? "リアルタイム測定中"
+          ? "測定中"
           : processState === "analyzing"
             ? "解析中"
-            : analysis
-              ? "測定結果"
-              : baseline
-                ? "本測定の準備完了"
-                : audio.permissionGranted
-                  ? "基準測定の準備完了"
-                  : "マイクを準備";
-  const measurementDuration = recordedAudio?.duration ?? liveDuration;
+            : audio.permissionGranted ? "" : "マイク未設定";
 
   const saveCsv = () => {
     if (!analysis || !baseline) {
@@ -541,14 +534,19 @@ export default function App() {
           </span>
           <div>
             <h1>ドップラー効果</h1>
-            <p>観測振動数 f を時間に対して測る</p>
           </div>
         </div>
         <div className="header-status" aria-live="polite">
-          <span
-            className={isRecordingMeasurement ? "status-dot status-dot-live" : "status-dot"}
-          />
-          <strong>{currentStatus}</strong>
+          <button type="button" className="header-microphone" aria-label="マイクの準備を開く"
+            disabled={isBusy || audio.isRecording} onClick={() => setMicrophoneOpen(true)}>
+            <MicrophoneIcon size={18} weight="bold" />
+          </button>
+          {currentStatus ? (
+            <>
+              <span className={isRecordingMeasurement ? "status-dot status-dot-live" : "status-dot"} />
+              <strong>{currentStatus}</strong>
+            </>
+          ) : null}
           {isRecordingMeasurement ? (
             <span className="header-time">{audio.elapsed.toFixed(1)} s</span>
           ) : null}
@@ -556,12 +554,9 @@ export default function App() {
       </header>
 
       <main className="lab-workspace">
-        <section className="graph-panel" aria-label="振動数グラフ">
+        <section className="graph-panel" data-trim={Boolean(analysis && recordedAudio && !isRecordingMeasurement)} aria-label="振動数グラフ">
           <div className="graph-header">
             <div>
-              <span className="graph-kicker">
-                {isRecordingMeasurement ? "LIVE" : "GRAPH"}
-              </span>
               <h2>
                 {graphMode === "frequency"
                   ? "観測振動数 f"
@@ -600,14 +595,6 @@ export default function App() {
               onSelect={setSelectedPointIndex}
             />
 
-            {!displayAnalysis && processState === "idle" ? (
-              <div className="graph-empty">
-                <ChartLineUpIcon size={36} weight="light" aria-hidden="true" />
-                <strong>測定すると、ここにグラフが描かれます</strong>
-                <span>右の「マイク」から順に進めてください。</span>
-              </div>
-            ) : null}
-
             {(processState === "countdown-baseline" ||
               processState === "countdown-measurement") &&
             countdown ? (
@@ -625,7 +612,7 @@ export default function App() {
             ) : null}
 
             <div className="message-stack">
-              {audio.error ? (
+              {audio.error && !microphoneOpen ? (
                 <StatusMessage tone="error">{audio.error}</StatusMessage>
               ) : null}
               {actionError ? (
@@ -675,7 +662,6 @@ export default function App() {
               {selectedPoint ? (
                 <QualityBadge
                   label={selectedPoint.qualityLabel}
-                  score={selectedPoint.qualityScore}
                 />
               ) : (
                 <strong>—</strong>
@@ -730,20 +716,7 @@ export default function App() {
                 有効 {validVisiblePointCount}/{visiblePointCount}点
               </p>
             </div>
-          ) : (
-            <div className="trim-strip trim-strip-live">
-              <span>
-                {isRecordingMeasurement
-                  ? "測定中はグラフをリアルタイム更新します"
-                  : "測定後に範囲と t = 0 を調整できます"}
-              </span>
-              <strong>
-                {measurementDuration > 0
-                  ? `${measurementDuration.toFixed(1)} s`
-                  : "Δf = f − f₀"}
-              </strong>
-            </div>
-          )}
+          ) : null}
         </section>
 
         <aside className="control-panel" aria-label="測定操作">
@@ -777,53 +750,9 @@ export default function App() {
           <div className="workflow-list">
             <Step
               number={1}
-              title="マイク"
-              value={
-                audio.permissionGranted
-                  ? audio.devices.find(
-                      (device) => device.deviceId === audio.selectedDeviceId,
-                    )?.label || "使用できます"
-                  : "使用を許可します"
-              }
-              ready={audio.permissionGranted}
-            >
-              {audio.permissionGranted && audio.devices.length > 0 ? (
-                <select
-                  className="compact-select"
-                  aria-label="使用する入力デバイス"
-                  value={audio.selectedDeviceId}
-                  disabled={audio.isRecording}
-                  onChange={(event) =>
-                    audio.setSelectedDeviceId(event.target.value)
-                  }
-                >
-                  {audio.devices.map((device, index) => (
-                    <option key={device.deviceId} value={device.deviceId}>
-                      {device.label || `マイク ${index + 1}`}
-                    </option>
-                  ))}
-                </select>
-              ) : null}
-              <button
-                className="action-button"
-                type="button"
-                disabled={isBusy || audio.isRecording}
-                onClick={() => void audio.requestPermission()}
-              >
-                <MicrophoneIcon size={18} weight="bold" />
-                {audio.permissionGranted ? "選び直す" : "準備する"}
-              </button>
-            </Step>
-
-            <Step
-              number={2}
               title="基準 f₀"
               value={
-                baselineCandidate
-                  ? `${baselineCandidate.frequency.toFixed(1)} Hz`
-                  : processState === "recording-baseline"
-                    ? "測定中"
-                    : "台車を静止させます"
+                processState === "recording-baseline" ? "測定中" : "静止"
               }
               ready={Boolean(baseline)}
             >
@@ -841,14 +770,12 @@ export default function App() {
             </Step>
 
             <Step
-              number={3}
+              number={2}
               title="本測定"
               value={
                 isRecordingMeasurement
                   ? `${audio.elapsed.toFixed(1)} / ${settings.maxDuration.toFixed(0)} s`
-                  : analysis
-                    ? `${analysis.points.length}点`
-                    : "台車を動かします"
+                  : "移動"
               }
               ready={Boolean(analysis)}
             >
@@ -964,11 +891,19 @@ export default function App() {
             </div>
           </div>
 
-          <p className="privacy-note">
-            音声と測定結果はブラウザ内だけで処理します。
-          </p>
         </aside>
       </main>
+
+      {microphoneOpen ? (
+        <MicrophoneDialog
+          devices={audio.devices}
+          selectedDeviceId={audio.selectedDeviceId}
+          onDeviceChange={audio.setSelectedDeviceId}
+          onPrepare={audio.requestPermission}
+          onClose={() => setMicrophoneOpen(false)}
+          error={audio.error}
+        />
+      ) : null}
 
       {settingsOpen ? (
         <div
@@ -985,8 +920,7 @@ export default function App() {
           >
             <header>
               <div>
-                <span>SETTINGS</span>
-                <h2>測定と解析の設定</h2>
+                <h2>設定</h2>
               </div>
               <button
                 type="button"

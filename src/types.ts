@@ -78,7 +78,7 @@ export interface WorkerAnalyzeResponse {
 }
 
 export const DEFAULT_SETTINGS: AnalysisSettings = {
-  expectedFrequency: 4000,
+  expectedFrequency: 2000,
   baselineDuration: 1.8,
   maxDuration: 10,
   windowDuration: 0.2,

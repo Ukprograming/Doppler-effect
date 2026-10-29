@@ -16,7 +16,7 @@ interface AudioCaptureState {
   isRecording: boolean;
   elapsed: number;
   error: string | null;
-  requestPermission: () => Promise<void>;
+  requestPermission: () => Promise<boolean>;
   refreshDevices: () => Promise<void>;
   startCapture: () => Promise<void>;
   getCaptureSnapshot: () => RecordedAudio | null;
@@ -151,19 +151,19 @@ export function useAudioCapture(): AudioCaptureState {
       setError(
         "マイクはHTTPSまたはlocalhostでのみ利用できます。公開時はHTTPSのURLを使ってください。",
       );
-      return;
+      return false;
     }
     if (!navigator.mediaDevices?.getUserMedia) {
       setError(
         "このブラウザではマイク入力を利用できません。最新版のChromeまたはEdgeを使用してください。",
       );
-      return;
+      return false;
     }
     if (!window.AudioWorkletNode) {
       setError(
         "このブラウザは高精度な音声取得に対応していません。最新版のChromeまたはEdgeへ更新してください。",
       );
-      return;
+      return false;
     }
 
     try {
@@ -180,7 +180,9 @@ export function useAudioCapture(): AudioCaptureState {
         },
       };
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      streamRef.current = stream;
       const context = new AudioContext({ latencyHint: "interactive" });
+      contextRef.current = context;
       await context.audioWorklet.addModule(
         new URL("pcm-processor.js", document.baseURI).toString(),
       );
@@ -212,6 +214,7 @@ export function useAudioCapture(): AudioCaptureState {
         () => {
           recordingRef.current = false;
           setIsRecording(false);
+          setPermissionGranted(false);
           setError(
             "測定中にマイクが切断されました。接続を確認して、マイクをもう一度許可してください。",
           );
@@ -238,10 +241,12 @@ export function useAudioCapture(): AudioCaptureState {
       setPermissionGranted(true);
       await refreshDevices();
       startLevelMonitor();
+      return true;
     } catch (caughtError) {
       await disposeAudio();
       setPermissionGranted(false);
       setError(explainMediaError(caughtError));
+      return false;
     }
   }, [
     disposeAudio,

@@ -12,7 +12,8 @@ test("デモ音声からf-tを確認し、Δf-tへ切り替えられる", async 
   page.on("pageerror", (error) => pageErrors.push(error.message));
 
   await page.goto("/");
-  await expect(page.locator("h1")).toContainText("ドップラー振動数ラボ");
+  await page.getByRole("button", { name: "あとで", exact: true }).click();
+  await expect(page.locator("h1")).toContainText("ドップラー効果");
   await expect(
     page.getByRole("button", { name: "基準を測る" }),
   ).toBeDisabled();
@@ -59,6 +60,7 @@ test("Chromebookの一画面にグラフと操作UIが収まる", async ({
 }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.goto("/");
+  await page.getByRole("button", { name: "あとで", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "デモ" }),
   ).toBeVisible();
@@ -79,6 +81,7 @@ test("Chromebookの一画面にグラフと操作UIが収まる", async ({
 test("狭いChromebook相当でも横にはみ出さない", async ({ page }) => {
   await page.setViewportSize({ width: 720, height: 900 });
   await page.goto("/");
+  await page.getByRole("button", { name: "あとで", exact: true }).click();
   const dimensions = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
     page: document.documentElement.scrollWidth,
@@ -89,6 +92,7 @@ test("狭いChromebook相当でも横にはみ出さない", async ({ page }) =>
 test("低い画面でも主要操作が一画面に残る", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 600 });
   await page.goto("/");
+  await page.getByRole("button", { name: "あとで", exact: true }).click();
   const dimensions = await page.evaluate(() => ({
     viewportHeight: document.documentElement.clientHeight,
     pageHeight: document.documentElement.scrollHeight,
@@ -96,7 +100,7 @@ test("低い画面でも主要操作が一画面に残る", async ({ page }) => 
   expect(dimensions.pageHeight).toBeLessThanOrEqual(
     dimensions.viewportHeight,
   );
-  await expect(page.getByRole("button", { name: "準備する" })).toBeInViewport();
+  await expect(page.getByRole("button", { name: "マイクの準備を開く" })).toBeInViewport();
   await expect(page.getByRole("button", { name: "基準を測る" })).toBeInViewport();
   await expect(page.getByRole("button", { name: "測定開始" })).toBeInViewport();
   await expect(page.getByRole("button", { name: "設定" })).toBeInViewport();
@@ -107,8 +111,9 @@ test.describe("iPad相当", () => {
 
   test("縦向きで主要操作とタッチ用グラフ操作が使える", async ({ page }) => {
     await page.goto("/");
+  await page.getByRole("button", { name: "あとで", exact: true }).click();
     await expect(page.getByRole("button", { name: "デモ" })).toBeInViewport();
-    await expect(page.getByRole("button", { name: "準備する" })).toBeInViewport();
+    await expect(page.getByRole("button", { name: "マイクの準備を開く" })).toBeInViewport();
     await page.getByRole("button", { name: "デモ" }).click();
     await expect(page.getByText("基準 f₀ = 4000.0 Hz")).toBeVisible({
       timeout: 20_000,

@@ -525,9 +525,6 @@ export const FrequencyChart = forwardRef<
           全体
         </button>
       </div>
-      <p className="chart-gesture-hint">
-        ドラッグで移動・ホイール／ピンチで拡大
-      </p>
       <svg
         ref={setSvgRef}
         width={WIDTH}
@@ -572,17 +569,6 @@ export const FrequencyChart = forwardRef<
           </clipPath>
         </defs>
         <rect width={WIDTH} height={HEIGHT} fill="#ffffff" rx="24" />
-        <text
-          x={MARGIN.left}
-          y={27}
-          fill="#172033"
-          fontSize="20"
-          fontWeight="750"
-        >
-          {mode === "frequency"
-            ? "PCが観測した振動数"
-            : "基準の振動数からの「ずれ」"}
-        </text>
         {yTicks.map((tick) => (
           <g key={tick.y}>
             <line
