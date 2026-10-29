@@ -254,13 +254,21 @@ export const FrequencyChart = forwardRef<
       x: MARGIN.left + (plotWidth * index) / 5,
     };
   });
-  const yTicks = Array.from({ length: 6 }, (_, index) => {
-    const value =
-      currentDomain.yMaximum -
-      ((currentDomain.yMaximum - currentDomain.yMinimum) * index) / 5;
+  const roughYStep = Math.max(1, ySpan / 5);
+  const yStepMagnitude = 10 ** Math.floor(Math.log10(roughYStep));
+  const yStep =
+    ([1, 2, 5, 10].find((step) => step * yStepMagnitude >= roughYStep) ?? 10) *
+    yStepMagnitude;
+  const firstYTick = Math.ceil(currentDomain.yMinimum / yStep) * yStep;
+  const yTickCount = Math.max(
+    0,
+    Math.floor((currentDomain.yMaximum - firstYTick) / yStep) + 1,
+  );
+  const yTicks = Array.from({ length: yTickCount }, (_, index) => {
+    const value = firstYTick + index * yStep;
     return {
       value,
-      y: MARGIN.top + (plotHeight * index) / 5,
+      y: valueScale(value),
     };
   });
 
@@ -530,11 +538,6 @@ export const FrequencyChart = forwardRef<
     mode === "frequency"
       ? `基準 f₀ = ${baselineFrequency.toFixed(1)} Hz`
       : "0 Hz";
-  const referenceLabelWidth = mode === "frequency" ? 150 : 62;
-  const referenceLabelY = Math.min(
-    HEIGHT - MARGIN.bottom - 8,
-    Math.max(MARGIN.top + 25, referenceY - 8),
-  );
 
   return (
     <div
@@ -624,16 +627,19 @@ export const FrequencyChart = forwardRef<
               y2={tick.y}
               stroke="#e5eaf1"
             />
-            <text
-              x={MARGIN.left - 14}
-              y={tick.y + 4}
-              textAnchor="end"
-              fill="#657187"
-              fontSize="12"
-              fontFamily="ui-monospace, monospace"
-            >
-              {tick.value.toFixed(1)}
-            </text>
+            {Math.abs(tick.y - referenceY) >= 18 ? (
+              <text
+                className="chart-y-tick"
+                x={MARGIN.left - 14}
+                y={tick.y + 4}
+                textAnchor="end"
+                fill="#657187"
+                fontSize="12"
+                fontFamily="ui-monospace, monospace"
+              >
+                {tick.value.toFixed(0)}
+              </text>
+            ) : null}
           </g>
         ))}
         {xTicks.map((tick) => (
@@ -738,24 +744,28 @@ export const FrequencyChart = forwardRef<
             );
           })}
         </g>
-        <rect
-          x={WIDTH - MARGIN.right - referenceLabelWidth}
-          y={referenceLabelY - 18}
-          width={referenceLabelWidth}
-          height={23}
-          rx={7}
-          fill="#eef5dc"
-          stroke="#bdd18b"
+        <line
+          x1={MARGIN.left - 7}
+          x2={MARGIN.left}
+          y1={referenceY}
+          y2={referenceY}
+          stroke="#668523"
+          strokeWidth="2.4"
         />
         <text
-          x={WIDTH - MARGIN.right - 9}
-          y={referenceLabelY - 2}
+          className="chart-reference-label"
+          x={MARGIN.left - 14}
+          y={referenceY}
           textAnchor="end"
-          fill="#435d14"
-          fontSize="11"
+          dominantBaseline="middle"
+          fill="#668523"
+          fontSize="12"
           fontWeight="750"
+          fontFamily="ui-monospace, monospace"
+          aria-label={referenceLabel}
         >
-          {referenceLabel}
+          <title>{referenceLabel}</title>
+          {referenceValue.toFixed(0)}
         </text>
         <text
           x={MARGIN.left + plotWidth / 2}

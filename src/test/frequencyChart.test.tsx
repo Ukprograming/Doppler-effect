@@ -91,8 +91,16 @@ describe("振動数グラフ", () => {
   });
 
   it("f-tでは基準振動数、Δf-tでは0 Hzのラインを表示する", () => {
-    const { rerender } = renderChart("frequency");
-    expect(screen.getByText("基準 f₀ = 4000.0 Hz")).toBeInTheDocument();
+    const { container, rerender } = renderChart("frequency");
+    const reference = container.querySelector(".chart-reference-label")!;
+    const baseline = container.querySelector(".chart-baseline")!;
+    expect(reference).toHaveAttribute("aria-label", "基準 f₀ = 4000.0 Hz");
+    expect(reference.getAttribute("fill")).toBe(baseline.getAttribute("stroke"));
+    expect(reference.getAttribute("y")).toBe(baseline.getAttribute("y1"));
+    expect(Number(reference.getAttribute("x"))).toBeLessThan(Number(baseline.getAttribute("x1")));
+    for (const tick of container.querySelectorAll(".chart-y-tick")) {
+      expect(tick.textContent).toMatch(/^-?\d+$/);
+    }
 
     rerender(
       <FrequencyChart
@@ -106,7 +114,7 @@ describe("振動数グラフ", () => {
         onSelect={() => undefined}
       />,
     );
-    expect(screen.getByText("0 Hz")).toBeInTheDocument();
+    expect(container.querySelector(".chart-reference-label")).toHaveAttribute("aria-label", "0 Hz");
   });
 
   it("拡大と表示範囲のリセットができる", () => {

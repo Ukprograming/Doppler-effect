@@ -20,7 +20,7 @@ test("デモ音声からf-tを確認し、Δf-tへ切り替えられる", async 
 
   await page.getByRole("button", { name: "デモ" }).click();
   await expect(
-    page.getByText("基準 f₀ = 4000.0 Hz"),
+    page.locator('.chart-reference-label[aria-label="基準 f₀ = 4000.0 Hz"]'),
   ).toBeVisible({ timeout: 20_000 });
   await expect(
     page.getByRole("heading", { name: "観測振動数 f" }),
@@ -50,7 +50,7 @@ test("デモ音声からf-tを確認し、Δf-tへ切り替えられる", async 
   await expect(
     page.getByRole("heading", { name: "振動数のずれ Δf" }),
   ).toBeVisible();
-  await expect(page.getByText("0 Hz", { exact: true })).toBeVisible();
+  await expect(page.locator('.chart-reference-label[aria-label="0 Hz"]')).toBeVisible();
 
   expect(pageErrors).toEqual([]);
 });
@@ -115,7 +115,7 @@ test.describe("iPad相当", () => {
     await expect(page.getByRole("button", { name: "デモ" })).toBeInViewport();
     await expect(page.getByRole("button", { name: "マイクの準備を開く" })).toBeInViewport();
     await page.getByRole("button", { name: "デモ" }).click();
-    await expect(page.getByText("基準 f₀ = 4000.0 Hz")).toBeVisible({
+    await expect(page.locator('.chart-reference-label[aria-label="基準 f₀ = 4000.0 Hz"]')).toBeVisible({
       timeout: 20_000,
     });
 
